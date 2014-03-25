@@ -18,11 +18,13 @@ var app = app || {};
 		// The DOM events specific to an item.
 		events: {
 			'click .toggle': 'toggleCompleted',
-			'dblclick label': 'edit',
+			'drag label': 'toggleCompleted',
+			'doubleclick .todo-item': 'edit',
+			'doubletap label': 'edit',
 			'click .destroy': 'clear',
 			'keypress .edit': 'updateOnEnter',
 			'keydown .edit': 'revertOnEscape',
-			'blur .edit': 'close'
+			'blur .edit': 'close',
 		},
 
 		// The TodoView listens for changes to its model, re-rendering. Since
@@ -80,8 +82,10 @@ var app = app || {};
 
 		// Close the `"editing"` mode, saving changes to the todo.
 		close: function () {
-			var value = this.$input.val();
-			var trimmedValue = value.trim();
+			var valueTitle = this.$('#editTitle').val();
+			var valueDate = this.$('#editDate').val();
+			var trimmedValueTitle = valueTitle.trim();
+			var trimmedValueDate = valueDate.trim();
 
 			// We don't want to handle blur events from an item that is no
 			// longer being edited. Relying on the CSS class here has the
@@ -90,19 +94,7 @@ var app = app || {};
 			if (!this.$el.hasClass('editing')) {
 				return;
 			}
-
-			if (trimmedValue) {
-				this.model.save({ title: trimmedValue });
-
-				if (value !== trimmedValue) {
-					// Model values changes consisting of whitespaces only are
-					// not causing change to be triggered Therefore we've to
-					// compare untrimmed version with a trimmed one to check
-					// whether anything changed
-					// And if yes, we've to trigger change event ourselves
-					this.model.trigger('change');
-				}
-			} else {
+			else {
 				this.clear();
 			}
 
