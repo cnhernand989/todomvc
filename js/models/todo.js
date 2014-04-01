@@ -6,10 +6,10 @@ Backbone.Model.prototype.toJSON = function(){
 };
 
 Backbone.Model.prototype._parseDates = function(attrs){
-	console.log(attrs);
 	attrs = _.clone(attrs);
 	var newdate = attrs.date.split("/").reverse().join("/");
-	attrs.date = new Date(newdate).toISOString();
+	attrs.date = new Date(newdate).toUTCString();
+	console.log(attrs.date);
 	return attrs;
 };
 
